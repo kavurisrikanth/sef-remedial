@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  * 
  * @author Lynn Robert Carter
  * 
- * @author Saireddy Goutham Kavuri Srikanth, karthik reddy, Venkatesh, Deepak. Sudheendra
+ * @author Kavuri Srikanth
  * 
  * @version 4.00	2017-10-16 The mainline of a JavaFX-based GUI implementation of a long integer calculator
  * 
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 
 public class Calculator extends Application {
 	
-	public final static double WINDOW_WIDTH = 1000;
+	public final static double WINDOW_WIDTH = 1600;
 	public final static double WINDOW_HEIGHT = 600;
 	
 	public UserInterface theGUI;
@@ -40,7 +40,7 @@ public class Calculator extends Application {
 	@Override
 	public void start(Stage theStage) throws Exception {
 		
-		theStage.setTitle("Double calculator Baseline");				// Label the stage (a window)
+		theStage.setTitle("Srikanth Kavuri");				// Label the stage (a window)
 		
 		Pane theRoot = new Pane();							// Create a pane within the window
 		

@@ -6,7 +6,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-
 public class EnhancedToString {
 	
 	public String enhancedET = "";
@@ -26,19 +25,20 @@ public class EnhancedToString {
 	
 	
 	public String mvToString(BigDecimal measuredValue,boolean measureSign) {
-		DecimalFormat decfor = new DecimalFormat(measuredValue.toPlainString());
+		DecimalFormat decfor;
 		String x= "";
 		if(measuredValue.compareTo(measureUpperLimit)<0 && measuredValue.compareTo(measureLowerLimit)>0) {
 			if(!measureSign) {
 				measuredValue = measuredValue.negate();
 			}
-			System.out.println("Measured Value:" + measuredValue.toPlainString());
+			System.out.println("Measured Value if:" + measuredValue.toPlainString());
 			x= measuredValue.toPlainString();
 		}
 		else {
 			String dcmlfrmt = "0.";
 			int lngt = 0;
 			if(measuredValue.compareTo(one)>=0) {
+				System.out.println("plain string: " + measuredValue);
 				lngt = measuredValue.toPlainString().length();
 			}
 			else {
@@ -53,6 +53,7 @@ public class EnhancedToString {
 				}
 				lngt = measuredValue.toPlainString().substring(sig).length();
 			}
+			System.out.println("lngt: " + lngt);
 			for(int i = 0;i<lngt;i++) {
 				dcmlfrmt = dcmlfrmt + "0";
 			}
@@ -62,7 +63,7 @@ public class EnhancedToString {
 				measuredValue = measuredValue.negate();
 			}
 			x = decfor.format(measuredValue);
-			System.out.println("Measured Value:" +  x);
+			System.out.println("Measured Value else:" +  x);
 		}
 		return x;
 	}
@@ -72,7 +73,7 @@ public class EnhancedToString {
 	
 	
 	public String etToString(BigDecimal error) {
-		DecimalFormat decfor1 = new DecimalFormat(error.toPlainString());
+		DecimalFormat decfor1;
 		String x="";
 		if(error.compareTo(errorUpperLimit)<0 && error.compareTo(errorLowerLimit)>0) {
 			System.out.println("Error: " + error.toPlainString());
@@ -103,15 +104,16 @@ public class EnhancedToString {
 	
 	
 	public String cvToString(CalculatorValue value) {
-		BigDecimal measuredValue = new BigDecimal(value.getMeasuredValue());
-		Double decimalError =value.getMeasuredValueError();
+		BigDecimal measuredValue = new BigDecimal(value.measuredValue.getDouble());
+		Double decimalError =value.errorTerm.getDouble();
 
 		System.out.println("value: " + measuredValue + ", error: " + decimalError);
 
 		boolean measureSign = measuredValue.compareTo(zero)>=0;
 		measuredValue = measuredValue.abs();
-		MathContext mc = new MathContext(1, RoundingMode.DOWN);
+		MathContext mc = new MathContext(3, RoundingMode.DOWN);
 		BigDecimal error = new BigDecimal(decimalError, mc);
+		System.out.println("error: " + error);
 	    BigDecimal multiplier = new BigDecimal(10);
 		String errorString = error.toPlainString();
 		enhancedET = etToString(error);

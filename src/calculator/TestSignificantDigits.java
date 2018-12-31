@@ -19,6 +19,12 @@ public class TestSignificantDigits {
 
         value = "3.2000";
         runTest(value, 5);
+
+        value = "300.300";
+        runTest(value, 6);
+
+        value = "300.00300";
+        runTest(value, 8);
     }
 
     private static void runTest(String value, int expected) throws Exception {

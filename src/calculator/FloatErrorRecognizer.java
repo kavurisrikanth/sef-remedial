@@ -13,7 +13,7 @@ class MeasuredValueRecognizer {
 	 * 
 	 * @author Lynn Robert Carter
 	 * 
-	 * @author Saireddy goutham Kavuri Srikanth, karthik reddy, Venkatesh, Deepak. Sudheendra
+	 * @author Kavuri Srikanth
 	 * 
 	 * @version 0.00		2018-02-04	Initial baseline 
 	 * 
