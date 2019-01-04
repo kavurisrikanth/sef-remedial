@@ -562,8 +562,10 @@ public class BusinessLogic {
 		// operand has an error term, then the other operand's error term is deduced from the
 		// measured value.
 		if (!operand1errDefined && !operand2errDefined) {
-			operand1.errorTerm = new UNumber(0);
-			operand2.errorTerm = new UNumber(0);
+			operand1.errorTerm = new UNumber(0.0);
+			operand2.errorTerm = new UNumber(0.0);
+			operand1errDefined = true;
+			operand2errDefined = true;
 		}
 		if (!operand1errDefined && operand2errDefined) {
 			operand1.errorTerm = operand1.estimatedErrorTerm;
@@ -594,8 +596,10 @@ public class BusinessLogic {
 		// The same logic as addition.
 
 		if (!operand1errDefined && !operand2errDefined) {
-			operand1.errorTerm = new UNumber(0);
-			operand2.errorTerm = new UNumber(0);
+			operand1.errorTerm = new UNumber(0.0);
+			operand2.errorTerm = new UNumber(0.0);
+			operand1errDefined = true;
+			operand2errDefined = true;
 		}
 		if (!operand1errDefined && operand2errDefined) {
 			operand1.errorTerm = operand1.estimatedErrorTerm;
@@ -624,8 +628,10 @@ public class BusinessLogic {
 	 */
 	public String multiplication() {
 		if (!operand1errDefined && !operand2errDefined) {
-			operand1.errorTerm = new UNumber(0);
-			operand2.errorTerm = new UNumber(0);
+			operand1.errorTerm = new UNumber(0.0);
+			operand2.errorTerm = new UNumber(0.0);
+			operand1errDefined = true;
+			operand2errDefined = true;
 		}
 		if (!operand1errDefined && operand2errDefined) {
 			operand1.errorTerm = operand1.estimatedErrorTerm;
@@ -654,8 +660,10 @@ public class BusinessLogic {
 	 */
 	public String division() {
 		if (!operand1errDefined && !operand2errDefined) {
-			operand1.errorTerm = new UNumber(0);
-			operand2.errorTerm = new UNumber(0);
+			operand1.errorTerm = new UNumber(0.0);
+			operand2.errorTerm = new UNumber(0.0);
+			operand1errDefined = true;
+			operand2errDefined = true;
 		}
 		if (!operand1errDefined && operand2errDefined) {
 			operand1.errorTerm = operand1.estimatedErrorTerm;
