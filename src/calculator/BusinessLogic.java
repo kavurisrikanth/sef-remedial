@@ -367,6 +367,15 @@ public class BusinessLogic {
 		return r;
 	}
 
+	/*
+	 * The following four methods help to retrieve the indices and values for the units in UserInterface.
+	 */
+
+	/**
+	 * This method takes in the string representation of a unit and "translates" it, by parsing, into an
+	 * array of indices that UserInterface can use to set the units for operands 1 and 2.
+	 * @param us - String representation of a unit.
+	 */
 	public void translateUnitString(String us) {
 		// The unit string is of the following form: (scale.name)^value
 		// Dimensions are separated by a *.
@@ -386,19 +395,19 @@ public class BusinessLogic {
 			if (massFound) {
 				indices.addAll(result);
 				for (int i = 0; i < 6; i++) {
-					indices.add("-1");
+					indices.add(null);
 				}
 			} else if (lengthFound) {
 				for (int i = 0; i < 3; i++) {
-					indices.add("-1");
+					indices.add(null);
 				}
 				indices.addAll(result);
 				for (int i = 0; i < 3; i++) {
-					indices.add("-1");
+					indices.add(null);
 				}
 			} else {
 				for (int i = 0; i < 6; i++) {
-					indices.add("-1");
+					indices.add(null);
 				}
 				indices.addAll(result);
 			}
@@ -420,18 +429,18 @@ public class BusinessLogic {
 					if (lengthFound) {
 						indices.addAll(result);
 						for (int i = 0; i < 3; i++) {
-							indices.add("-1");
+							indices.add(null);
 						}
 					} else {
 						for (int i = 0; i < 3; i++) {
-							indices.add("-1");
+							indices.add(null);
 						}
 						indices.addAll(result);
 					}
 				} else {
 					// Just LT.
 					for (int i = 0; i < 3; i++) {
-						indices.add("-1");
+						indices.add(null);
 					}
 					indices.addAll(result);
 					result = translateUnitDimension(pieces[1]);
@@ -447,70 +456,81 @@ public class BusinessLogic {
 		unitData = indices.toArray(new String[9]);
 	}
 
+	/**
+	 * This method converts the string representation of one dimension (M or L or T) into a list
+	 * of unit indices and values.
+	 * @param s - String representation of a unit dimension.
+	 * @return - List of Strings.
+	 */
 	private ArrayList<String> translateUnitDimension(String s) {
 		ArrayList<String> ans = new ArrayList<>();
 
-		System.out.println("S: " + s);
-
+		// The received string is of the format (scale.name)^value.
 		// Split the string by ^.
 		String[] pieces = s.split("\\^");
-		System.out.println("pieces length: " + pieces.length);
 
+		// The pieces now contain (scale.name) and value.
+		// If the value is 0, then we have no unit to speak of. So just
+		// set -1 (sentinel value) to everything.
 		if (pieces[1].equals("0.0")) {
-			ans.add("-1");
-			ans.add("-1");
-			ans.add("-1");
+			ans.add(null);
+			ans.add(null);
+			ans.add(null);
 		} else {
+			// There is a value, so the first piece must be parsed.
 			// Remove the parentheses.
 			String temp = pieces[0];
 			temp = temp.substring(1, temp.length() - 1);
-			System.out.println("temp: " + temp);
 
 			// Now temp is of the format scale.name
 			if (temp.indexOf('.') != -1) {
-				// There is a scale
-				System.out.println("scale found");
+				// There is a scale. So split the string by '.' and...
 				String[] subPieces = temp.split("\\.");
 				String scale = subPieces[0];
+
+				// ...add the indices corresponding to scale and unit
 				ans.add(getScaleIndex(scale));
 				ans.add(getUnitIndex(subPieces[1]));
+
+				// And finally, add the value.
 				ans.add(pieces[1]);
 			} else {
-				// There is no scale
-				System.out.println("No scale");
+				// There is no scale. So just add the index for the name.
 				String dimIndex = getUnitIndex(temp);
-				ans.add("-1");
+				ans.add(null);
 				ans.add(dimIndex);
 				ans.add(pieces[1]);
 			}
 
-			System.out.println("mass: " + massFound + ", length: " + lengthFound + ", time: " + timeFound);
 		}
 
 		return ans;
 	}
 
+	/**
+	 * This method returns the index to be set for a specific scale.
+	 * @param s - The scale
+	 * @return - Index of s.
+	 */
 	private String getScaleIndex(String s) {
 		String[] scales = {"--", "E", "P", "T", "G", "M", "k", "h", "da", "d", "c", "m", "\u03BC", "n", "p", "f", "a"};
 		return Integer.toString(Arrays.asList(scales).indexOf(s));
 	}
 
+	/**
+	 * This method returns the index to be set for a specific unit name.
+	 * @param s - The unit name
+	 * @return - Index of s.
+	 */
 	private String getUnitIndex(String s) {
 		String[] mass = {"oz", "lb", "kg", "g"},
 				length = {"yd", "mi", "ft", "in","m", "km"},
 				time = {"s", "min", "hr", "day"};
 
-		for (String mass1 : mass) {
-			System.out.println(mass1);
-		}
-
-		System.out.println("searching for index of: " + s);
 
 		int massIndex = Arrays.asList(mass).indexOf(s),
 				lengthIndex = Arrays.asList(length).indexOf(s),
 				timeIndex = Arrays.asList(time).indexOf(s);
-
-		System.out.println("Mass index: " + massIndex + ", length index: " + lengthIndex + ", time index: " + timeIndex);
 
 		if (massIndex >= 0) {
 			massFound = true;
@@ -522,9 +542,19 @@ public class BusinessLogic {
 			timeFound = true;
 			return Integer.toString(timeIndex + 1);
 		} else
-			return "-1";
+			return null;
 	}
 
+	/**
+	 * This method is used when units are changed by the user.
+	 * @param massScale - The mass scale
+	 * @param massUnit - The mass unit name
+	 * @param lenScale - The length scale
+	 * @param lenUnit - The length unit name
+	 * @param timeScale - The time scale
+	 * @param timeUnit - The time unit name
+	 * @return - The string representation of the altered unit.
+	 */
 	public String changeUnits(String massScale, String massUnit, String lenScale, String lenUnit, String timeScale, String timeUnit) {
 		// Logically, result should contain the old values.
 		result.changeUnit(massScale, massUnit, lenScale, lenUnit, timeScale, timeUnit);
@@ -685,7 +715,7 @@ public class BusinessLogic {
 		if (resultErrorMessage.length() > 0)
 			return "";
 		String resultString = result.toString();
-		System.out.println("result str: " + resultString);
+		System.out.println("result: " + resultString);
 		String[] pieces = resultString.split(" ");
 		if (pieces.length == 3)
 			translateUnitString(pieces[2]);

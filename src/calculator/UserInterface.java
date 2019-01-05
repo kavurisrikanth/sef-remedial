@@ -689,67 +689,71 @@ public class UserInterface {
 		if (unitData == null || unitData.length == 0)
 			return;
 
-		// Get the scale and name indices
-		int mass_scale_index = Integer.parseInt(unitData[0]),
-				mass_name_index = Integer.parseInt(unitData[1]),
-				length_scale_index = Integer.parseInt(unitData[3]),
-				length_name_index = Integer.parseInt(unitData[4]),
-				time_scale_index = Integer.parseInt(unitData[6]),
-				time_name_index = Integer.parseInt(unitData[7]);
-
-		// And also the values
-		double mass_value = Double.parseDouble(unitData[2]),
-				length_value = Double.parseDouble(unitData[5]),
-				time_value = Double.parseDouble(unitData[8]);
-
-		// And start populating the ComboBoxes and TextFields.
-		// The rule for ComboBoxes is that if the index is -1, then just select the first
-		// element in the ComboBox. Otherwise, select based on the index.
-
-		// Set the values for the ComboBoxes.
-		if (mass_scale_index != -1)
-			massScale.getSelectionModel().select(mass_scale_index);
-		else
+		// The array unitData contains 9 terms. If an entry at a specific index is supposed to
+		// signify the presence of a unit, then the entry will NOT be null!
+		// Check for this and populate 9 unit UI items accordingly.
+		if (unitData[0] == null)
 			massScale.getSelectionModel().selectFirst();
+		else {
+			int mass_scale_index = Integer.parseInt(unitData[0]);
+			massScale.getSelectionModel().select(mass_scale_index);
+		}
 
-		if (mass_name_index != -1)
-			massUnits.getSelectionModel().select(mass_name_index);
-		else
+		if (unitData[1] == null)
 			massUnits.getSelectionModel().selectFirst();
+		else {
+			int mass_name_index = Integer.parseInt(unitData[1]);
+			massUnits.getSelectionModel().select(mass_name_index);
+		}
 
-		if (length_scale_index != -1)
-			lengthScale.getSelectionModel().select(length_scale_index);
-		else
-			lengthScale.getSelectionModel().selectFirst();
-
-		if (length_name_index != -1)
-			lengthUnits.getSelectionModel().select(length_name_index);
-		else
-			lengthUnits.getSelectionModel().selectFirst();
-
-		if (time_scale_index != -1)
-			timeScale.getSelectionModel().select(time_scale_index);
-		else
-			timeScale.getSelectionModel().selectFirst();
-
-		if (time_name_index != -1)
-			timeUnits.getSelectionModel().select(time_name_index);
-		else
-			timeUnits.getSelectionModel().selectFirst();
-
-		// Set up TextFields.
-		if (mass_value != -1)
-			massValue.setText(Double.toString(mass_value));
-		else
+		if (unitData[2] == null)
 			massValue.setText("");
-		if (length_value != -1)
-			lengthValue.setText(Double.toString(length_value));
-		else
+		else {
+			double mass_value = Double.parseDouble(unitData[2]);
+			massValue.setText(Double.toString(mass_value));
+		}
+
+		if (unitData[3] == null)
+			lengthScale.getSelectionModel().selectFirst();
+		else {
+			int length_scale_index = Integer.parseInt(unitData[3]);
+			lengthScale.getSelectionModel().select(length_scale_index);
+		}
+
+		if (unitData[4] == null)
+			lengthUnits.getSelectionModel().selectFirst();
+		else {
+			int length_name_index = Integer.parseInt(unitData[4]);
+			lengthUnits.getSelectionModel().select(length_name_index);
+		}
+
+		if (unitData[5] == null)
 			lengthValue.setText("");
-		if (time_value != -1)
-			timeValue.setText(Double.toString(time_value));
-		else
+		else {
+			double length_value = Double.parseDouble(unitData[5]);
+			lengthValue.setText(Double.toString(length_value));
+		}
+
+		if (unitData[6] == null)
+			timeScale.getSelectionModel().selectFirst();
+		else {
+			int time_scale_index = Integer.parseInt(unitData[6]);
+			timeScale.getSelectionModel().select(time_scale_index);
+		}
+
+		if (unitData[7] == null)
+			timeUnits.getSelectionModel().selectFirst();
+		else {
+			int time_name_index = Integer.parseInt(unitData[7]);
+			timeUnits.getSelectionModel().select(time_name_index);
+		}
+
+		if (unitData[8] == null)
 			timeValue.setText("");
+		else {
+			double time_value = Double.parseDouble(unitData[8]);
+			timeValue.setText(Double.toString(time_value));
+		}
 	}
 
 	/**
@@ -954,7 +958,6 @@ public class UserInterface {
 		temp = op1UnitValue_time.getText();
 		sb.append(temp.length() > 0 ? temp : "0");
 
-		System.out.println("Setting operand 1 - mv: " + text_Operand1.getText() + ",  et: " + text_Operand1error.getText() + ", unit: " + sb.toString());
 		if (perform.setOperand1(text_Operand1.getText(), text_Operand1error.getText(), sb.toString())) {	// Set the operand and see if there was an error
 			label_errOperand1.setText("");						// If no error, clear this operands error
 			label_errOperand1error.setText("");					// If no error, clear this operands error
@@ -1027,7 +1030,6 @@ public class UserInterface {
 		temp = op2UnitValue_time.getText();
 		sb.append(temp.length() > 0 ? temp : "0");
 
-		System.out.println("Setting operand 2 - mv: " + text_Operand2.getText() + ",  et: " + text_Operand2error.getText() + ", unit: " + sb.toString());
 		if (perform.setOperand2(text_Operand2.getText(),text_Operand2error.getText(), sb.toString())) {
 			label_errOperand2.setText("");
 			label_errOperand2error.setText("");
@@ -1191,11 +1193,9 @@ public class UserInterface {
 		// If the operands are defined and valid, request the business logic method to do the multiplication and return the
 		// result as a String. If there is a problem with the actual computation, an empty string is returned
 		String theAnswer = perform.multiplication();						// Call the business logic add method
-		System.out.println("the answer: " + theAnswer);
 		String[] ans = theAnswer.split(" ");
 		label_errResult.setText("");									// Reset any result error messages from before
 		if (theAnswer.length() > 0) {								// Check the returned String to see if it is okay
-			System.out.println("ans[0]: " + ans[0]);
 			text_Result.setText(ans[0]);							// If okay, display it in the result field and
 			text_Result_error.setText(ans[1]);
 			populateUnits(massScaleResult, massUnitsResult, resultUnitValue_mass,

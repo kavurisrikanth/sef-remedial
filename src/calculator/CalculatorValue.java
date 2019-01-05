@@ -164,13 +164,11 @@ public class CalculatorValue {
 
 		getNumberFromString(v);							// Parse the measured value string.
 		pdDigitsMV = getNumPostDecimalDigits(v);		// Get the number of digits after the decimal point.
-		System.out.println("Error term pdd: " + pdDigitsMV + " for et: " + v);
 		measuredValue = new UNumber(number);			// Store the number and the error message.
 		errorMessageMV  = string;
 
 		getNumberFromString(e);							// The same logic as the measured value above.
 		pdDigitsET = getNumPostDecimalDigits(e);
-		System.out.println("Error term pdd: " + pdDigitsET + " for et: " + e);
 		errorTerm = new UNumber(number);
 		errorMessageET = string;
 
